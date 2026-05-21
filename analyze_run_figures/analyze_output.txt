@@ -1,0 +1,72 @@
+PS C:\main data\GC Coursework\audio and speech\new_project> & C:/Users/nehma/AppData/Local/Programs/Python/Python312/python.exe "c:/main data/GC Coursework/audio and speech/new_project/scripts/analyze_run_outputs.py"
+========================================================================
+TRAINING (metrics.jsonl)
+========================================================================
+Rows: 9270  |  global_optimizer_step: 1 -> 9270
+
+Cross-entropy (smoothed, beta=0.98):
+  min:   4.990847  at step 9046
+  max:   11.322042
+  first: 11.322042  |  last: 5.079098
+  drop (first -> last): 6.242943  (55.1% relative)
+
+Window means (first 463 vs last 463 optimizer steps):
+  train_ce_smooth:     7.304887  ->  5.046750
+  train_total_smooth:  7.304887  ->  5.046805
+  train_ce_batch (raw batch, not EMA): first batch mean 6.778155  last batch mean 5.048493
+
+Orthogonality schedule:
+  lambda_orth_eff > 0 from global_step 930  (value 1.077586e-04)
+  lambda final: 1.000000e-01  max: 1.000000e-01
+  orth_penalty_raw:   min 0.0005  max 682.5627  last 0.0005
+  orth_penalty_scaled last: 5.014273e-05
+
+LR:  first 6.465517e-07  last 9.523956e-10
+grad_norm_after_clip:  median 0.8420  p95 1.9017  max 32.1639
+
+========================================================================
+VALIDATION (from train.log - mean batch CE, no label smoothing)
+========================================================================
+Epochs logged: 80  |  best: epoch 16  val_ce=5.656675
+First epoch val_ce: 6.576948  |  last epoch val_ce: 5.944471
+Drift after best: last - best = +0.287796 (positive => val worsening / mild overfitting on CE)
+
+Mean val_ce first ~26 epochs: 5.834580
+Mean val_ce last ~26 epochs:  5.932094
+  - Validation CE rises in later epochs (typical overfitting or optimization past optimum).
+
+========================================================================
+INFERENCE ABLATION (ablation_metrics.json)
+========================================================================
+Clips: 8
+
+clip                   lev_gt_base d_style_gt   d_cnt_gt |base-sty| |base-cnt|
+------------------------------------------------------------------------------
+wid_1634_shift_0          1167.000    16.375    15.625   1183.250    888.500
+wid_1743_shift_0          1665.250     6.125    -0.500   1670.500    234.375
+wid_2061_shift_0          1945.500    18.875     0.000   1963.625      1.500
+wid_2204_shift_0          6146.000    77.750     0.000   6226.500      0.625
+wid_296_shift_0           2820.625     5.625     0.000   2828.875     38.250
+wid_3493_shift_0          1225.625     0.750    -2.000   1225.875   1218.500
+wid_3816_shift_0          1599.250     3.000     1.375   1202.875   1602.000
+wid_640_shift_0           1128.250    26.375     0.000   1155.750      1.500
+
+Aggregate (mean over clips):
+  lev_mean_vs_gt_base:                    2212.188  (median 1632.250)
+  d vs GT when masking style (pos=worse): +19.359
+  d vs GT when masking content:             +1.812
+  |baseline - mask_style| (token change):  2182.156
+  |baseline - mask_content|:               498.156
+
+Interpretation hints:
+  - d_style / d_content: how much worse GT match gets when that head group is ablated.
+  - |base-sty| large: style ablation strongly changes autoregressive tokens vs full model.
+  - |base-cnt| ~ 0: content ablation barely changes output (content path may be unused for that clip).
+
+Figures directory: C:\main data\GC Coursework\audio and speech\new_project\analyze_run_figures
+  wrote analyze_run_figures\orth_penalty_vs_step.png
+  wrote analyze_run_figures\val_mean_ce_vs_epoch.png
+  wrote analyze_run_figures\ablation_token_shift_bars.png
+  wrote analyze_run_figures\lev_gt_base_vs_d_style_gt_scatter.png
+
+PS C:\main data\GC Coursework\audio and speech\new_project> 
