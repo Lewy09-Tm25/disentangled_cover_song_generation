@@ -152,7 +152,7 @@ The architecture is intentionally kept lightweight for training on a single GPU.
 
 ## Training
 
-**Hardware:** Training was run on an NVIDIA A40 (48GB VRAM), provided by the [LUMaA Lab](https://www.lumaa.info/) (Laboratory for Understanding Music and Audio) at Brooklyn College, CUNY.
+**Hardware:** Training was run on an NVIDIA A40 (48GB VRAM).
 
 **Key training decisions:**
 
